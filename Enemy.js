@@ -1,7 +1,8 @@
 export default class Enemy {
-  constructor(boardElement){
+  constructor(boardElement, level){
     this.element = document.createElement('div')
     this.boardElement = boardElement
+    this.level = level
     this.enemyIntetval = null
   }
   
@@ -23,7 +24,8 @@ export default class Enemy {
   moveEnemy(){
   
     if (parseInt(this.element.style.top) <= window.innerHeight) {
-  this.element.style.top = `${parseInt(this.element.style.top) + 5}px`
+  this.element.style.top = `${parseInt(this.element.style.top) + 5 + this.level}px`
+  
        
     } else {
       this.element.remove()

@@ -4,20 +4,30 @@ import Statistics from './Statistics.js'
 
 class Game {
   constructor() {
+    this.startScreen = document.querySelector('.start-screen')
+    this.gameScreen = document.querySelector('.game-screen')
+    this.startBtn = document.querySelector('.start-button')
     this.htmlCraft = document.querySelector('.craft');
     this.btnLeft = document.querySelector('.btn--left');
     this.btnRight = document.querySelector('.btn--right');
     this.fireBtn = document.querySelector('.btn--missile');
     this.boardElement = document.querySelector('.board');
     this.craft = new Spaceship(this.htmlCraft, this.fireBtn, this.boardElement);
+    this.alert = document.querySelector('.game-screen__alert')
     this.missilePositionInterval = null;
     this.enemyInterval = null;
     this.collisionInterval = null;
     this.enemies = [];
     this.stats = new Statistics();
   }
+  
+  onLoad(){
+    this.startBtn.addEventListener('click', () => { this.start()})
+  } 
 
   start() {
+    this.startScreen.style.display = 'none';
+    this.gameScreen.style.display = 'block'
     this.stats.displayPoints();
     this.craft.init();
     this.btnLeft.addEventListener('click', () => {
@@ -40,7 +50,7 @@ class Game {
   }
 
   generateEnemies() {
-    const enemy = new Enemy(this.boardElement);
+    const enemy = new Enemy(this.boardElement, this.stats.getLevel());
     enemy.init();
     this.enemies.push(enemy);
   }
@@ -102,20 +112,42 @@ checkCollision() {
 
     this.stats.addPoints(10);
     this.stats.displayPoints();
+    
 
     this.craft.missiles.splice(missileIndex, 1);
     this.enemies.splice(enemyIndex, 1);
+    if(this.stats.points === 100){
+      this.stats.levelUp()
+      this.alert.textContent = 'level' + this.stats.getLevel()
+      setTimeout(()=>{
+        this.alert.textContent = ''
+      },3000)
+      
+      this.stats.points = 0
+    }
   }
 
   handleShipCollision(enemyIndex) {
-    console.log('game over')
 
-    // You can perform other actions when the ship is hit by an enemy
-    // For example, reduce health, trigger game over, etc.
-    // this.stats.reduceHealth(10);
-    // this.stats.checkGameOver();
+    if (this.stats.getLives() > 0) {
+      this.stats.takeOfLive()
+    } 
+    
+  // Display game over message
+  this.alert.textContent = 'Game Over';
+  
+  // Stop game loop
+  clearInterval(this.missilePositionInterval);
+  clearInterval(this.enemyInterval);
+  clearInterval(this.collisionInterval);
+  
+  // Show start screen
+  this.startScreen.style.display = 'block';
+  this.gameScreen.style.display = 'none';
+    
+    
   }
 }
 
 const game = new Game();
-game.start();
+game.onLoad()

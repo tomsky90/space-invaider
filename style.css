@@ -5,6 +5,34 @@ body {
     position: relative;
 }
 
+.start-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center ;
+  flex-wrap: wrap;
+  text-align: center;
+} 
+
+.start-screen__heading {
+  color: #fff;
+  width: 100%;
+} 
+
+.start-button {
+  padding: 20px 60px;
+  margin-top: 50px
+} 
+
+.game-screen {
+  display: none;
+} 
+
+.game-screen__alert {
+  color: #fff;
+  text-align: center ;
+} 
+
+
 p{
   color: #fff;
 }
